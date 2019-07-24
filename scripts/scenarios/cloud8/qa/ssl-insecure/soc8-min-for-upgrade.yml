@@ -103,7 +103,6 @@ proposals:
       cinder-controller:
       - cluster:services
       cinder-volume:
-      - cluster:services
       - "@@compute-kvm1@@"
 - barclamp: neutron
   attributes:
