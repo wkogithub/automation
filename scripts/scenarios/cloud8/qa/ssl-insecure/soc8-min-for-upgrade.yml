@@ -1,0 +1,160 @@
+---
+proposals:
+- barclamp: pacemaker
+  name: services
+  attributes:
+    stonith:
+      mode: ipmi_barclamp
+      sbd:
+        nodes:
+          @@controller1@@:
+            devices:
+            - ''
+          @@controller2@@:
+            devices:
+            - ''
+          @@controller3@@:
+            devices:
+            - ''
+      per_node:
+        nodes:
+          @@controller1@@:
+            params: ''
+          @@controller2@@:
+            params: ''
+          @@controller3@@:
+            params: ''
+    drbd:
+  deployment:
+    elements:
+      pacemaker-cluster-member:
+      - "@@controller1@@"
+      - "@@controller2@@"
+      - "@@controller3@@"
+      hawk-server:
+      - "@@controller1@@"
+      - "@@controller2@@"
+      - "@@controller3@@"
+- barclamp: database
+  attributes:
+    sql_engine: mysql
+  deployment:
+    elements:
+      database-server:
+      - cluster:services
+- barclamp: rabbitmq
+  attributes:
+    password: Gf8df2bz2Ra9
+    trove:
+      password: q5rVBdnFalKw
+  deployment:
+    elements:
+      rabbitmq-server:
+      - cluster:services
+- barclamp: keystone
+  attributes:
+    database_instance: default
+    rabbitmq_instance: default
+    db:
+      password: 2HPSxlYOtrTw
+    service:
+      token: OWaET0iXR2xz
+  deployment:
+    elements:
+      keystone-server:
+      - cluster:services
+# WARNING: no proposals exist for monasca barclamp
+# WARNING: no proposals exist for ceph barclamp
+# WARNING: no proposals exist for swift barclamp
+- barclamp: glance
+  attributes:
+    service_password: Yds75jzRJ9D3
+    db:
+      password: eXKDd9h4n1w3
+    vsphere:
+      user: admin
+      password: crowbar
+    keystone_instance: default
+    database_instance: default
+    rabbitmq_instance: default
+  deployment:
+    elements:
+      glance-server:
+      - cluster:services
+- barclamp: cinder
+  attributes:
+    rabbitmq_instance: default
+    keystone_instance: default
+    glance_instance: default
+    database_instance: default
+    service_password: uyGrR4sHWfGh
+    keymgr_fixed_key: 6nfU4Sq81Hft
+    volumes:
+    - backend_driver: local
+      backend_name: file
+      local:
+        volume_name: cinder-volumes
+        file_name: "/var/lib/cinder/volume.raw"
+        file_size: 2000
+    db:
+      password: R0ifwwvsyaXZ
+  deployment:
+    elements:
+      cinder-controller:
+      - cluster:services
+      cinder-volume:
+      - cluster:services
+      - "@@compute-kvm1@@"
+- barclamp: neutron
+  attributes:
+    service_password: BrCZ21t4brVS
+    rabbitmq_instance: default
+    keystone_instance: default
+    database_instance: default
+    db:
+      password: 3eJRzewbnH7N
+    zvm:
+      zvm_xcat_username: admin
+      zvm_xcat_password: crowbar
+  deployment:
+    elements:
+      neutron-server:
+      - cluster:services
+      neutron-network:
+      - cluster:services
+# WARNING: no proposals exist for ironic barclamp
+- barclamp: nova
+  attributes:
+    service_password: VJa6Q7NpcEeu
+    neutron_metadata_proxy_shared_secret: RWpr5IyYaL15
+    database_instance: default
+    rabbitmq_instance: default
+    keystone_instance: default
+    glance_instance: default
+    cinder_instance: default
+    neutron_instance: default
+    itxt_instance: ''
+    compute_remotefs_sshkey: |
+      -----BEGIN OPENSSH PRIVATE KEY-----
+      b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+      QyNTUxOQAAACA9M3QglK9CF3EEihJhkaRKvLYQHB+l1hSWCkH+TO5/xAAAAKg+3SA5Pt0g
+      OQAAAAtzc2gtZWQyNTUxOQAAACA9M3QglK9CF3EEihJhkaRKvLYQHB+l1hSWCkH+TO5/xA
+      AAAECMr95Sb8tXzXY5OyOP6VLHdK353xFVSIx0+rtD1uHAZz0zdCCUr0IXcQSKEmGRpEq8
+      thAcH6XWFJYKQf5M7n/EAAAAIWNyb3diYXJAY3Jvd2Jhci52bzYuY2xvdWQuc3VzZS5kZQ
+      ECAwQ=
+      -----END OPENSSH PRIVATE KEY-----
+    ec2-api:
+      db:
+        password: tnztXFSM5ZIp
+    db:
+      password: 471RKv9hebhG
+    api_db:
+      password: JZbpaogCeK9S
+  deployment:
+    elements:
+      nova-controller:
+      - cluster:services
+      nova-compute-kvm:
+      - "@@compute-kvm1@@"
+      nova-compute-qemu: []
+      nova-compute-xen: []
