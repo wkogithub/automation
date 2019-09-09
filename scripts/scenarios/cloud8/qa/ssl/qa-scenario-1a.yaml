@@ -211,7 +211,6 @@ proposals:
       ceilometer-agent:
       - "@@compute-kvm1@@"
       - "@@compute-kvm2@@"
-      - "@@monasca-server@@"
       ceilometer-agent-hyperv: []
       ceilometer-central:
       - cluster:services
@@ -221,30 +220,6 @@ proposals:
       - "@@controller1@@"
       - "@@controller2@@"
       - "@@controller3@@"
-- barclamp: monasca
-  attributes:
-  deployment:
-    elements:
-      monasca-master:
-      - "@@crowbar@@"
-      monasca-server:
-      - "@@monasca-server@@"
-      monasca-log-agent:
-      - "@@controller1@@"
-      - "@@controller2@@"
-      - "@@controller3@@"
-      - "@@compute-kvm@@"
-      - "@@storage-swift1@@"
-      - "@@storage-swift2@@"
-      - "@@monasca-server@@"
-      monasca-agent:
-      - "@@controller1@@"
-      - "@@controller2@@"
-      - "@@controller3@@"
-      - "@@compute-kvm@@"
-      - "@@storage-swift1@@"
-      - "@@storage-swift2@@"
-      - "@@monasca-server@@"
 #- barclamp: aodh
 #  deployment:
 #    elements:
