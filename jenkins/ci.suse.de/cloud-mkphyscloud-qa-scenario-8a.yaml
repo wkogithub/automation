@@ -194,7 +194,7 @@
           export hacloud=$hacloud ;
           export clusterconfig=$clusterconfig ;
           export shared_storage_ip=$shared_storage_ip
-          export want_node_aliases=controller=3,compute-kvm=1,storage-swift=2,monasca-server=1 ;
+          export want_node_aliases=controller=3,compute-kvm=2,storage-swift=1,monasca-server=1 ;
           export networkingplugin=$networkingplugin ;
           export networkingmode=$networkingmode ;
           export want_swift=1 ;
