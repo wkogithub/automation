@@ -166,7 +166,7 @@ proposals:
   deployment:
     elements:
       ceilometer-agent:
-      - "@@compute-kvm1@@"
+      - "@@compute-kvm@@"
       - "@@compute-kvm2@@"
       - "@@monasca-server@@"
       ceilometer-agent-hyperv: []
