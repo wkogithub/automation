@@ -38,23 +38,24 @@ proposals:
       - "@@controller3@@"
 - barclamp: database
   attributes:
-    mysql:
-      ssl:
-        enabled: true
-        certfile: ##certfile##
-        keyfile: ##keyfile##
-        ca_certs: ##cafile##
+    ha:
+      storage:
+        shared:
+          device: ##shared_nfs_for_database##
+          fstype: nfs
+          options: nfsvers=3
   deployment:
     elements:
       database-server:
       - cluster:services
 - barclamp: rabbitmq
   attributes:
-    ssl:
-      enabled: true
-      certfile: ##certfile##
-      keyfile: ##keyfile##
-      client_ca_certs: ##cafile##
+    ha:
+      storage:
+        shared:
+          device: ##shared_nfs_for_rabbitmq##
+          fstype: nfs
+          options: nfsvers=3
     client:
       enable_notifications: true
   deployment:
@@ -64,51 +65,21 @@ proposals:
 - barclamp: keystone
   attributes:
     ssl:
-      certfile: ##certfile##
-      keyfile: ##keyfile##
-      ca_certs: ##cafile##
+      generate_certs: true
+      insecure: true
     api:
       protocol: https
   deployment:
     elements:
       keystone-server:
       - cluster:services
-- barclamp: swift
-  attributes:
-    replicas: 2
-    ssl:
-      certfile: ##certfile##
-      keyfile:  ##keyfile##
-    cluster_hash: 181d283256
-    keystone_delay_auth_decision: true
-    allow_versions: true
-    middlewares:
-      crossdomain:
-        enabled: true
-      formpost:
-        enabled: true
-      staticweb:
-        enabled: true
-      tempurl:
-        enabled: true
-  deployment:
-    elements:
-      swift-dispersion: []
-      swift-proxy:
-      - cluster:services
-      swift-ring-compute:
-      - "@@controller1@@"
-      swift-storage:
-      - "@@storage-swift1@@"
-      - "@@storage-swift2@@"
 - barclamp: glance
   attributes:
     api:
       protocol: https
     ssl:
-      certfile: ##certfile##
-      keyfile:  ##keyfile##
-      ca_certs: ##cafile##
+      generate_certs: true
+      insecure: true
     default_store: swift
   deployment:
     elements:
@@ -126,9 +97,8 @@ proposals:
     api:
       protocol: https
     ssl:
-      certfile: ##certfile##
-      keyfile:  ##keyfile##
-      ca_certs: ##cafile##
+      generate_certs: true
+      insecure: true
   deployment:
     elements:
       cinder-controller:
@@ -146,9 +116,8 @@ proposals:
     ml2_type_drivers_default_provider_network: ##networkingmode##
     ml2_type_drivers_default_tenant_network: ##networkingmode##
     ssl:
-      certfile: ##certfile##
-      keyfile:  ##keyfile##
-      ca_certs: ##cafile##
+      generate_certs: true
+      insecure: true
     api:
       protocol: https
   deployment:
@@ -166,9 +135,9 @@ proposals:
     kvm:
       ksm_enabled: true
     ssl:
-      certfile: ##certfile##
-      keyfile:  ##keyfile##
-      ca_certs: ##cafile##
+      enabled: true
+      generate_certs: true
+      insecure: true
     novnc:
       ssl:
         enabled: true
@@ -190,56 +159,9 @@ proposals:
 - barclamp: horizon
   attributes:
     apache:
+      generate_certs: true
       ssl: true
-      ssl_crt_file: ##certfile##
-      ssl_key_file: ##keyfile## 
-      ssl_crt_chain_file: ##cafile##
   deployment:
     elements:
       horizon-server:
       - cluster:services
-- barclamp: heat
-  attributes:
-  deployment:
-    elements:
-      heat-server:
-      - cluster:services
-- barclamp: ceilometer
-  attributes:
-  deployment:
-    elements:
-      ceilometer-agent:
-      - "@@compute-kvm1@@"
-      - "@@compute-kvm2@@"
-      ceilometer-agent-hyperv: []
-      ceilometer-central:
-      - cluster:services
-      ceilometer-server:
-      - cluster:services
-      ceilometer-swift-proxy-middleware:
-      - "@@controller1@@"
-      - "@@controller2@@"
-      - "@@controller3@@"
-#- barclamp: aodh
-#  deployment:
-#    elements:
-#     aodh-server:
-#      - "@@controller1@@"
-- barclamp: barbican
-  attributes:
-  deployment:
-    elements:
-      barbican-controller:
-      - "@@controller1@@"
-- barclamp: sahara
-  attributes:
-  deployment:
-    elements:
-      sahara-server:
-      - "@@controller1@@"
-- barclamp: tempest
-  attributes:
-  deployment:
-    elements:
-      tempest:
-      - "@@controller1@@"
