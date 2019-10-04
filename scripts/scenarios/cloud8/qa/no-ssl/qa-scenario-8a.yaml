@@ -59,6 +59,31 @@ proposals:
       keystone-server:
       - cluster:services
 
+- barclamp: monasca
+  attributes:
+  deployment:
+    elements:
+      monasca-master:
+      - "@@crowbar@@"
+      monasca-server:
+      - "@@monasca-server@@"
+      monasca-log-agent:
+      - "@@controller1@@"
+      - "@@controller2@@"
+      - "@@controller3@@"
+      - "@@compute-kvm1@@"
+      - "@@compute-kvm2@@"
+      - "@@storage-swift@@"
+      - "@@monasca-server@@"
+      monasca-agent:
+      - "@@controller1@@"
+      - "@@controller2@@"
+      - "@@controller3@@"
+      - "@@compute-kvm1@@"
+      - "@@compute-kvm2@@"
+      - "@@storage-swift@@"
+      - "@@monasca-server@@"
+
 - barclamp: swift
   attributes:
     replicas: 2
@@ -178,31 +203,6 @@ proposals:
       - "@@controller1@@"
       - "@@controller2@@"
       - "@@controller3@@"
-
-- barclamp: monasca
-  attributes:
-  deployment:
-    elements:
-      monasca-master:
-      - "@@crowbar@@"
-      monasca-server:
-      - "@@monasca-server@@"
-      monasca-log-agent:
-      - "@@controller1@@"
-      - "@@controller2@@"
-      - "@@controller3@@"
-      - "@@compute-kvm1@@"
-      - "@@compute-kvm2@@"
-      - "@@storage-swift@@"
-      - "@@monasca-server@@"
-      monasca-agent:
-      - "@@controller1@@"
-      - "@@controller2@@"
-      - "@@controller3@@"
-      - "@@compute-kvm1@@"
-      - "@@compute-kvm2@@"
-      - "@@storage-swift@@"
-      - "@@monasca-server@@"
 
 - barclamp: tempest
   attributes:
