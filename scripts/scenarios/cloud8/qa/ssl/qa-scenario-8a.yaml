@@ -72,8 +72,6 @@ proposals:
       certfile: ##certfile##
       keyfile: ##keyfile##
       ca_certs: ##cafile##
-    api:
-      protocol: https
   deployment:
     elements:
       keystone-server:
@@ -112,8 +110,6 @@ proposals:
 
 - barclamp: swift
   attributes:
-    api:
-      protocol: https
     ssl:
       certfile: ##certfile##
       keyfile: ##keyfile##
