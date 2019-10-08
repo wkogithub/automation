@@ -107,7 +107,6 @@ proposals:
     ssl:
       certfile: ##certfile##
       keyfile: ##keyfile##
-      ca_certs: ##cafile##
     replicas: 2
     cluster_hash: 181d283256
     keystone_delay_auth_decision: true
