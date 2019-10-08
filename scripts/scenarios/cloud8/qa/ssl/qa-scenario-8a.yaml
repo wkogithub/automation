@@ -79,12 +79,6 @@ proposals:
 
 - barclamp: monasca
   attributes:
-    api:
-      protocol: https
-    ssl:
-      certfile: ##certfile##
-      keyfile:  ##keyfile##
-      ca_certs: ##cafile##
   deployment:
     elements:
       monasca-master:
