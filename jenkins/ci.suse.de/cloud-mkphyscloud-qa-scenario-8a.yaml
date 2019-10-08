@@ -183,7 +183,19 @@
 
           ret=0
 
+          # Copy CA files if SSL is enabled
+          if [[ $ssl_type = "ssl" ]]; then
+             ssh root@crowbar$hw_number "mkdir ssl-certs"
+             scp -r /home/jenkins/ssl-certs/qa$hw_number root@crowbar$hw_number:/root/ssl-certs/
+          fi
+
+          # On the admin node, Update certificate file paths if SSL is enabled. Always set variables.
           ssh root@$admin "
+          if [[ $ssl_type = "ssl" ]]; then
+             sed -i -e "s,##certfile##,/etc/cloud/ssl/qa$hw_number/qa$hw_number.cloud.suse.de.crt," scenario.yml
+             sed -i -e "s,##keyfile##,/etc/cloud/ssl/qa$hw_number/qa$hw_number.cloud.suse.de.pem," scenario.yml
+             sed -i -e "s,##cafile##,/etc/cloud/ssl/qa$hw_number/SUSE_CA_suse.de.chain.crt," scenario.yml
+          fi
           export cloud=$cloud ;
           export hw_number=$hw_number ;
           export UPDATEREPOS=$UPDATEREPOS ;
@@ -200,10 +212,9 @@
           export want_swift=1 ;
           export cephvolumenumber=1 ;
           export scenario=\"/root/scenario.yml\" ;
+
           export commands=\"$commands\" "'
-
           set -e
-
           echo "nodenumber=$nodenumber" >> mkcloud.config
           sed -i -e "s,##shared_nfs_for_database##,$shared_storage_ip:/var/$cloud/ha-database," scenario.yml
           sed -i -e "s,##shared_nfs_for_rabbitmq##,$shared_storage_ip:/var/$cloud/ha-rabbitmq," scenario.yml
@@ -211,12 +222,10 @@
           sed -i -e "s,##networkingplugin##,$networkingplugin," scenario.yml
           sed -i -e "s,##networkingmode##,$networkingmode," scenario.yml
           sed -i -e "s,@@crowbar@@,`hostname -f`", scenario.yml
-
           [ $UPDATEBEFOREINSTALL == "true" ] && export updatesteps="addupdaterepo runupdate"
 
           timeout --signal=ALRM 240m bash -x -c ". scripts/qa_crowbarsetup.sh ; onadmin_runlist $commands"
           crowbar batch --timeout 2400 build $scenario
-
           ' || ret=$?
 
 
